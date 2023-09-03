@@ -65,6 +65,7 @@ public class FacebookTests {
         // Complete sign up process
 
         sleep(50000); // Used to let the app loaded in the device, as the device takes long to load the app
+        randomTap(driver); // Tap to remove auto suggestion
         MobileElement createAccountButton = driver.findElement(By.xpath("//android.widget.Button[@content-desc=\"Create new account\"]"));
         createAccountButton.click();
         System.out.println("Create button is clicked....");
