@@ -15,6 +15,8 @@ import org.testng.annotations.Test;
 
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.Thread.sleep;
 
@@ -29,11 +31,17 @@ public class FacebookTests {
         DesiredCapabilities caps = new DesiredCapabilities();
 
         caps.setCapability(MobileCapabilityType.PLATFORM_NAME, "ANDROID");
-        caps.setCapability(MobileCapabilityType.PLATFORM_VERSION, "10");
-        caps.setCapability(MobileCapabilityType.DEVICE_NAME, "Redmi Note 7 Pro");
-        caps.setCapability(MobileCapabilityType.UDID, "8bcc435");
+        caps.setCapability(MobileCapabilityType.PLATFORM_VERSION, "11");
+        caps.setCapability(MobileCapabilityType.DEVICE_NAME, "Pixel 6a");
+        caps.setCapability(MobileCapabilityType.UDID, "emulator-5554");
         caps.setCapability(MobileCapabilityType.NEW_COMMAND_TIMEOUT, "120");
         caps.setCapability(MobileCapabilityType.AUTOMATION_NAME, "UiAutomator2");
+        caps.setCapability(MobileCapabilityType.APP, "C:\\Users\\mamun\\IdeaProjects\\facebook-app-automation\\src\\test\\resources\\apps/Facebook.apk");
+
+        // Capabilities for handling permissions and pop-ups
+        caps.setCapability("autoAcceptAlerts", true);
+        caps.setCapability("autoDismissAlerts", true);
+        caps.setCapability("autoGrantPermissions", true);
 
         // Capabilities for Android Apps settings
         caps.setCapability(AndroidMobileCapabilityType.APP_PACKAGE, "com.facebook.katana");
@@ -61,27 +69,25 @@ public class FacebookTests {
         // Go to Create a new account page
         // Fill up all the fields
         // Enter mobile number
-        // Verify OTP
+        // Fill up all the fields
         // Complete sign up process
 
         sleep(50000); // Used to let the app loaded in the device, as the device takes long to load the app
-        randomTap(driver); // Tap to remove auto suggestion
         MobileElement createAccountButton = driver.findElement(By.xpath("//android.widget.Button[@content-desc=\"Create new account\"]"));
         createAccountButton.click();
         System.out.println("Create button is clicked....");
+        //sleep(5000);
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 
-/*        //sleep(10000);
+/*
         MobileElement text = driver.findElementByXPath("//android.view.View[@content-desc=\"Join Facebook\"]");
         Assert.assertTrue(text.isDisplayed(), "Text is not found");*/
 
-        MobileElement getStartedButton = driver.findElementByXPath("//android.view.View[@content-desc=\"Get started\"]");
+        MobileElement getStartedButton = driver.findElementByXPath("//android.widget.Button[@content-desc=\"Get started\"]");
         getStartedButton.click();
         System.out.println("Started account creation...");
 
-        MobileElement cancelGmailLoginPopUp = driver.findElementById("com.google.android.gms:id/cancel");
-        cancelGmailLoginPopUp.click();
-        System.out.println("Gmail login cancelled...");
-
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         MobileElement firstName = driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/androidx.recyclerview.widget.RecyclerView/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.widget.EditText");
         firstName.sendKeys("Jack");
         System.out.println("First name is given..");
@@ -95,10 +101,13 @@ public class FacebookTests {
         MobileElement nextButton = driver.findElementByXPath("//android.widget.Button[@content-desc=\"Next\"]");
         nextButton.click();
         System.out.println("Navigated to the next page.");
+        //sleep(1000);
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 
         // Perform an upscroll to select a random birthday
-        //upScroll(driver);
         System.out.println("Selecting Birth Year....");
+        //sleep(2000);
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         MobileElement selectYear = driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.DatePicker/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.NumberPicker[3]/android.widget.Button");
         int count = 0;
         while (count < 18) {
@@ -115,6 +124,8 @@ public class FacebookTests {
 
         MobileElement birthdayNextButton = driver.findElementByXPath("//android.widget.Button[@content-desc=\"Next\"]");
         birthdayNextButton.click();
+        //sleep(2000);
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 
         // Selecting Gender
         MobileElement selectGender = driver.findElementByXPath("//android.widget.Button[@content-desc=\"Male\"]");
@@ -124,16 +135,10 @@ public class FacebookTests {
         MobileElement genderNextButton = driver.findElementByXPath("//android.widget.Button[@content-desc=\"Next\"]");
         genderNextButton.click();
 
-        // Entering Mobile Number
-        randomTap(driver);
-
-        sleep(5000);
-        MobileElement contactPermissionButton = driver.findElementById("com.android.permissioncontroller:id/permission_allow_button");
-        contactPermissionButton.click();
-        System.out.println("Allowed contact permission.");
 
         System.out.println("Entering mobile number...");
         MobileElement mobileNumber = driver.findElementByClassName("android.widget.EditText");
+        mobileNumber.clear();
         mobileNumber.sendKeys("+8801631103051");
         System.out.println("Mobile number is entered.");
 
@@ -156,6 +161,17 @@ public class FacebookTests {
         MobileElement agreeButton = driver.findElementByXPath("//android.widget.Button[@content-desc=\"I agree\"]");
         agreeButton.click();
         System.out.println("Agreed terms and conditions");
+        sleep(50000);
+
+        String otp="";
+        otp = getOtp();
+        //sleep(5000);
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        MobileElement otpField = driver.findElementByClassName("android.widget.EditText");
+        otpField.sendKeys(otp);
+
+        MobileElement otpNextButton = driver.findElementByXPath("//android.widget.Button[@content-desc=\"Next\"]");
+        otpNextButton.click();
 
         System.out.println("Signed up successfully!");
 
@@ -166,14 +182,12 @@ public class FacebookTests {
 
     }
 
-    public static void randomTap(AppiumDriver<MobileElement> driver) {
-
-        int X = 481;
-        int Y = 1545;
-
-        TouchAction touchAction = new TouchAction(driver);
-        touchAction.tap(PointOption.point(X, Y)).perform();
-
+    public String getOtp(){
+        String otp = "";
+        System.out.println("Enter the OTP now: ");
+        Scanner scanner = new Scanner(System.in);
+        otp = scanner.toString();
+        return  otp;
     }
 
     @AfterClass
