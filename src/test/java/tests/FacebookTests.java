@@ -162,7 +162,7 @@ public class FacebookTests {
         MobileElement agreeButton = driver.findElementByXPath("//android.widget.Button[@content-desc=\"I agree\"]");
         agreeButton.click();
         System.out.println("Agreed terms and conditions");
-        sleep(50000);
+        sleep(30000);
 
 
         System.out.println("Signed up successfully!");
