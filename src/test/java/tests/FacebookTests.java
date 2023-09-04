@@ -147,6 +147,7 @@ public class FacebookTests {
 
 
         // Creating password
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         MobileElement password = driver.findElementByClassName("android.widget.EditText");
         password.sendKeys("Test@Daraz2023");
         System.out.println("Password is entered...");
@@ -163,31 +164,10 @@ public class FacebookTests {
         System.out.println("Agreed terms and conditions");
         sleep(50000);
 
-        String otp="";
-        otp = getOtp();
-        //sleep(5000);
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        MobileElement otpField = driver.findElementByClassName("android.widget.EditText");
-        otpField.sendKeys(otp);
-
-        MobileElement otpNextButton = driver.findElementByXPath("//android.widget.Button[@content-desc=\"Next\"]");
-        otpNextButton.click();
 
         System.out.println("Signed up successfully!");
 
 
-
-
-
-
-    }
-
-    public String getOtp(){
-        String otp = "";
-        System.out.println("Enter the OTP now: ");
-        Scanner scanner = new Scanner(System.in);
-        otp = scanner.toString();
-        return  otp;
     }
 
     @AfterClass
